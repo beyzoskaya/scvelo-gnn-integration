@@ -5,6 +5,7 @@ import scanpy as sc
 import scvelo as scv
 from matplotlib.collections import LineCollection
 import pandas as pd
+import torch
 
 def plot_graph_connectivity(data, adata, subset_size=500):
     # (Same as before - keeping it short for this snippet)
@@ -99,3 +100,86 @@ def plot_error_distribution(scores_gcn, scores_gat):
     plt.legend()
     plt.savefig("compare_4_error_dist.png", dpi=150)
     plt.close()
+
+def plot_gene_reconstruction(y_true, y_pred, gene_names, subset_genes=4):
+    """
+    Scatter plots showing True vs Predicted expression for specific genes.
+    Perfect reconstruction would be a diagonal line.
+    """
+    print("   -> Generating Gene Reconstruction Plots...")
+    
+    if torch.is_tensor(y_true): y_true = y_true.detach().cpu().numpy()
+    if torch.is_tensor(y_pred): y_pred = y_pred.detach().cpu().numpy()
+    
+    # Pick random genes to show
+    total_genes = y_true.shape[1]
+    indices = np.random.choice(total_genes, subset_genes, replace=False)
+    
+    fig, axes = plt.subplots(1, subset_genes, figsize=(4*subset_genes, 4))
+    
+    for i, ax in enumerate(axes):
+        gene_idx = indices[i]
+        gene_name = gene_names[gene_idx]
+        
+        ax.scatter(y_true[:, gene_idx], y_pred[:, gene_idx], s=5, alpha=0.5, c='teal')
+        
+        # Plot ideal diagonal
+        max_val = max(y_true[:, gene_idx].max(), y_pred[:, gene_idx].max())
+        ax.plot([0, max_val], [0, max_val], 'r--')
+        
+        ax.set_title(f"Gene: {gene_name}")
+        ax.set_xlabel("True Expression")
+        ax.set_ylabel("Predicted")
+        
+    plt.tight_layout()
+    plt.savefig("visual_6_gene_reconstruction.png", dpi=150)
+    plt.close()
+    print("   -> Saved 'visual_6_gene_reconstruction.png'")
+
+def plot_gene_spatial_comparison(adata, y_true, y_pred, gene_names):
+    """
+    Visualizes the gene expression patterns on the PCA/UMAP manifold.
+    Left: Ground Truth (Noisy). Right: GNN Prediction (Denoised).
+    """
+    print("   -> Generating Gene Spatial Comparison...")
+    
+    # 1. Identify the best reconstructed genes (highest variance/activity)
+    # We pick genes that actually do something, not boring ones.
+    if torch.is_tensor(y_true): y_true = y_true.detach().cpu().numpy()
+    if torch.is_tensor(y_pred): y_pred = y_pred.detach().cpu().numpy()
+    
+    # Calculate correlation per gene
+    corrs = []
+    for i in range(y_true.shape[1]):
+        c = np.corrcoef(y_true[:, i], y_pred[:, i])[0,1]
+        corrs.append(c)
+    corrs = np.array(corrs)
+    
+    # Pick top 3 best correlated genes to show
+    best_gene_indices = np.argsort(corrs)[-3:] # Top 3
+    
+    # Get PCA coordinates
+    X_pca = adata.obsm['X_pca']
+    
+    fig, axes = plt.subplots(3, 2, figsize=(12, 12))
+    
+    for i, gene_idx in enumerate(best_gene_indices):
+        gene_name = gene_names[gene_idx]
+        corr_score = corrs[gene_idx]
+        
+        # Real Expression
+        sc1 = axes[i, 0].scatter(X_pca[:,0], X_pca[:,1], c=y_true[:, gene_idx], 
+                           s=10, cmap='viridis', alpha=0.8)
+        axes[i, 0].set_title(f"{gene_name} (True) | Noisy")
+        plt.colorbar(sc1, ax=axes[i, 0])
+        
+        # Predicted Expression
+        sc2 = axes[i, 1].scatter(X_pca[:,0], X_pca[:,1], c=y_pred[:, gene_idx], 
+                           s=10, cmap='viridis', alpha=0.8)
+        axes[i, 1].set_title(f"{gene_name} (Pred) | R={corr_score:.2f}")
+        plt.colorbar(sc2, ax=axes[i, 1])
+        
+    plt.tight_layout()
+    plt.savefig("visual_6_gene_spatial.png", dpi=150)
+    plt.close()
+    print("   -> Saved 'visual_6_gene_spatial.png'")

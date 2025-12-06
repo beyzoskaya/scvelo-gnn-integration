@@ -33,8 +33,7 @@ We compared two Geometric Deep Learning architectures:
 | **GATv2 (Graph Attention)** | Learns dynamic weights $\alpha_{ij}$ for every neighbor. | Superior at **branching points** where cells must "choose" a lineage. |
 
 **Loss Function:** A hybrid loss combining magnitude and direction:
-
-$$\mathcal{L} = \mathrm{MSE}(v_{\text{pred}}, v_{\text{true}}) + \lambda \left(1 - \cos(v_{\text{pred}}, v_{\text{true}})\right)$$
+$$ \mathcal{L} = \text{MSE}(v_{pred}, v_{true}) + \lambda (1 - \text{CosineSimilarity}) $$
 
 ---
 
