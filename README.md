@@ -1,6 +1,6 @@
 # Deep Graph Velocity: Generative Cell Fate Simulation
 
-![Banner](compare_3_streamlines.png)
+![Banner](figures/compare_3_streamlines.png)
 *> **Figure 1:** Vector Field Reconstruction. Left: Raw scVelo (Noisy). Center: GCN Prediction (Smoothed). Right: GAT Prediction (Sharp Decision Boundaries).*
 
 ## 🧬 Project Overview
@@ -50,11 +50,11 @@ The Graph Attention Network (GAT) demonstrated superior convergence and robustne
 | **VelocityGAT** | **0.9109** | **0.1749** | **High precision at decision points** |
 
 ### 2. Error Distribution
-![Error Dist](compare_4_error_dist.png)
+![Error Dist](figures/compare_4_error_dist.png)
 *> **Figure 2:** Density plot of prediction accuracy. The GAT (Orange) distribution is shifted significantly towards 1.0 (perfect alignment) and has a thinner "tail" of errors compared to GCN (Blue), indicating higher reliability.*
 
 ### 3. Performance by Cell Type
-![Boxplots](compare_2_cluster_performance.png)
+![Boxplots](figures/compare_2_cluster_performance.png)
 *> **Figure 3:** Per-cluster performance. Note the **Neuroblast** and **Granule immature** clusters (transient states). The GAT model (Orange) shows significantly lower variance and higher medians, proving it captures rapid differentiation dynamics better than GCN.*
 
 ---
@@ -63,7 +63,7 @@ The Graph Attention Network (GAT) demonstrated superior convergence and robustne
 
 One of the unique features of using GATs is **Interpretability**. By extracting the learned attention weights, we can visualize which cells the model deems "important" for driving the system dynamics.
 
-![Attention Map](compare_5_gat_attention.png)
+![Attention Map](figures/compare_5_gat_attention.png)
 *> **Figure 4:** Influence Score Heatmap. Bright spots indicate cells with high incoming attention weights. The model automatically highlights the **Radial Glia-like (Stem Cells)** and the **Branching Point** as the "Drivers" of the system, aligning perfectly with biological knowledge.*
 
 ---
