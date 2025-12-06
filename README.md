@@ -34,10 +34,7 @@ We compared two Geometric Deep Learning architectures:
 
 **Loss Function:** A hybrid loss combining magnitude and direction:
 
-$$
-\mathcal{L} = \mathrm{MSE}(v_{\text{pred}}, v_{\text{true}}) 
-+ \lambda \left(1 - \cos\left( v_{\text{pred}}, v_{\text{true}} \right)\right)
-$$
+$$\mathcal{L} = \mathrm{MSE}(v_{\text{pred}}, v_{\text{true}}) + \lambda \left(1 - \cos(v_{\text{pred}}, v_{\text{true}})\right)$$
 
 ---
 
