@@ -85,3 +85,24 @@ $$ x_{t+1} = x_t + \eta \cdot f(x_t, \mathcal{G}) $$
 ```bash
 conda env create -f environment_mac.yml
 conda activate scvelo-gnn
+```
+
+### 2. Run the Comparison
+To train both models, generate all plots, and run the simulation:
+```bash
+python compare_models.py
+```
+
+Note: You can switch between 'dentate' and 'pancreas' inside the script config.
+
+### 3. Project Structure
+*   `compare_models.py`: Master script for training, comparison, and evaluation of GCN vs GAT.
+*   `model.py`: PyTorch Geometric implementations of the GCN (Graph Convolution) and GAT (Graph Attention) architectures.
+*   `simulate.py`: Custom ODE solver logic for in-silico trajectory inference and generative simulation.
+*   `data_loader_step1.py`: Data pipeline handling integration with scVelo, Scanpy, and preprocessing.
+*   `visuals.py`: Comprehensive plotting suite for generating biological insights (Streamlines, Attention Maps, Boxplots).
+
+## 📚 References
+*   **scVelo:** Bergen et al., *Nature Biotechnology* (2020).
+*   **PyTorch Geometric:** Fey & Lenssen (2019).
+*   **Dataset:** Dentate Gyrus (Hochgerner et al., 2018).
