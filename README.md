@@ -74,7 +74,7 @@ Using the trained GNN as a vector field function $f(x, \mathcal{G})$, we impleme
 
 $$ x_{t+1} = x_t + \eta \cdot f(x_t, \mathcal{G}) $$
 
-![Simulation](figures/visual_4_simulation.png)
+![Simulation](figures/visual_4_simulation_dentate.png)
 *> **Figure 5:** In-Silico Lineage Tracing (Dentate Gyrus). Green dots represent starting Stem Cells (Radial Glia). Black lines track the GNN-predicted future states. The model correctly learns the **bifurcation**, sending some cells towards Astrocytes and others towards Granule cells.*
 
 ---
